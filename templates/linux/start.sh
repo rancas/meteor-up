@@ -6,6 +6,10 @@ BUNDLE_PATH=$APP_PATH/current
 ENV_FILE=$APP_PATH/config/env.list
 PORT=<%= port %>
 USE_LOCAL_MONGO=<%= useLocalMongo? "1" : "0" %>
+STATIC_FILES=$APP_PATH/static/$APPNAME
+
+# Create static directory
+mkdir -p $STATIC_FILES
 
 # Remove previous version of the app, if exists
 docker rm -f $APPNAME
@@ -24,6 +28,7 @@ if [ "$USE_LOCAL_MONGO" == "1" ]; then
     --restart=always \
     --publish=$PORT:80 \
     --volume=$BUNDLE_PATH:/bundle \
+    --volume=$STATIC_FILES:/media \
     --env-file=$ENV_FILE \
     --link=mongodb:mongodb \
     --hostname="$HOSTNAME-$APPNAME" \
@@ -36,6 +41,7 @@ else
     --restart=always \
     --publish=$PORT:80 \
     --volume=$BUNDLE_PATH:/bundle \
+    --volume=$STATIC_FILES:/media \
     --hostname="$HOSTNAME-$APPNAME" \
     --env-file=$ENV_FILE \
     --name=$APPNAME \
@@ -52,6 +58,7 @@ fi
     --restart=always \
     --volume=/opt/$APPNAME/config/bundle.crt:/bundle.crt \
     --volume=/opt/$APPNAME/config/private.key:/private.key \
+    --volume=$STATIC_FILES:/media \
     --link=$APPNAME:backend \
     --publish=<%= sslConfig.port %>:443 \
     --name=$APPNAME-frontend \
