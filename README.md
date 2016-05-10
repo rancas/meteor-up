@@ -100,6 +100,11 @@ This will create two files in your Meteor Up project directory:
   // This is the same as the line below.
   "app": "/Users/arunoda/Meteor/my-app",
 
+  // Bind the docker port running meteor to a specific server ip. 
+  // If bindHostIp is not set the meteor port would be bound to 0.0.0.0
+  // If 127.0.0.1 is used the app would not be reachable from outside the remote server and a revrese proxy should be configured
+  "bindHostIp":"127.0.0.1",
+
   // Configure environment
   // ROOT_URL must be set to your correct domain (https or http)
   "env": {
